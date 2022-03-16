@@ -9,11 +9,11 @@
 public interface IWeakListener
 {
     /// <summary>
-    ///     Returns `true` if the linked listener was garbage-collected.
+    ///     Returns <c>true</c> if the linked listener was garbage-collected.
     /// </summary>
     /// <remarks>
     ///     In this case, the listener can be removed from the observable.
     /// </remarks>
-    /// <returns>`true` if the linked listener was garbage-collected.</returns>
+    /// <returns><c>true</c> if the linked listener was garbage-collected.</returns>
     public bool WasGarbageCollected();
 }

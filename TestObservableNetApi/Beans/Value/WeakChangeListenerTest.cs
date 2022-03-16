@@ -3,14 +3,18 @@ using NUnit.Framework;
 using ObservableNetApi.Beans;
 using ObservableNetApi.Beans.Value;
 
-namespace TestObservableNetApi.Beans;
+namespace TestObservableNetApi.Beans.Value;
 
 [TestFixture]
-public class WeakInvalidationListenerTest
+public class WeakChangeListenerTest
 {
-    private WeakInvalidationListener? _weakListener;
+    private WeakChangeListener<object?>? _weakListener;
 
     private readonly ObservableMock _o = new();
+
+    private readonly object _obj1 = new();
+
+    private readonly object _obj2 = new();
 
     [Test]
     public void TestHandle()
@@ -18,22 +22,23 @@ public class WeakInvalidationListenerTest
         TestHandlerStart();
 
         // GC-ed call
-        GC.Collect(0);
+        _o.Reset();
+        GC.Collect();
         Assert.True(_weakListener!.WasGarbageCollected());
-        _weakListener.Invalidated(_o);
+        _weakListener.Changed(_o, _obj2, _obj1);
         Assert.AreEqual(1, _o.Counter);
     }
 
     private void TestHandlerStart()
     {
-        var listener = new InvalidationListenerMock();
-        _weakListener = new WeakInvalidationListener(listener);
+        var listener = new ChangeListenerMock<object?>(new object());
+        _weakListener = new WeakChangeListener<object?>(listener);
 
         // regular call
-        _o.Reset();
-        _weakListener.Invalidated(_o);
-        listener.Check(_o, 1);
+        _weakListener.Changed(_o, _obj1, _obj2);
+        listener.Check(_o, _obj1, _obj2, 1);
         Assert.False(_weakListener.WasGarbageCollected());
+        Assert.AreEqual(0, _o.Counter);
 
         // ReSharper disable once RedundantAssignment
         listener = null;
@@ -43,7 +48,7 @@ public class WeakInvalidationListenerTest
     {
         public uint Counter;
 
-        public void RemoveListener(IInvalidationListener listener)
+        public void RemoveListener(IChangeListener<string?> listener)
         {
             Counter++;
         }
@@ -59,6 +64,11 @@ public class WeakInvalidationListenerTest
             // not used
         }
 
+        public void RemoveListener(IInvalidationListener listener)
+        {
+            // not used
+        }
+
         public bool IsListenerAlreadyAdded(IInvalidationListener listener)
         {
             // not used
@@ -66,11 +76,6 @@ public class WeakInvalidationListenerTest
         }
 
         public void AddListener(IChangeListener<string?> listener)
-        {
-            // not used
-        }
-
-        public void RemoveListener(IChangeListener<string?> listener)
         {
             // not used
         }
