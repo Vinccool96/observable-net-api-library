@@ -81,5 +81,5 @@ public interface IObservableValue<out T> : IObservable
     /// </summary>
     /// <param name="listener">The <c>IChangeListener</c> to verify</param>
     /// <returns><c>true</c>, if the listener already listens, <c>false</c> otherwise.</returns>
-    public bool IsListenerAlreadyAdded(IChangeListener<T> listener);
+    public bool HasListener(IChangeListener<T> listener);
 }

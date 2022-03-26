@@ -59,7 +59,7 @@ public class WeakInvalidationListenerTest
             // not used
         }
 
-        public bool IsListenerAlreadyAdded(IInvalidationListener listener)
+        public bool HasListener(IInvalidationListener listener)
         {
             // not used
             return false;
@@ -75,7 +75,7 @@ public class WeakInvalidationListenerTest
             // not used
         }
 
-        public bool IsListenerAlreadyAdded(IChangeListener<string?> listener)
+        public bool HasListener(IChangeListener<string?> listener)
         {
             // not used
             return false;

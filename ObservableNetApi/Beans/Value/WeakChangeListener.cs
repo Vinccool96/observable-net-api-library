@@ -5,7 +5,8 @@
 ///     reference to the listener.
 /// </summary>
 /// <remarks>
-///     This helps to avoid memory leaks, that can occur if observers are not unregistered from observed objects after use.
+///     This helps to avoid memory leaks, that can occur if observers are not unregistered from observed objects after
+///     use.
 ///     <para>
 ///         <c>WeakChangeListener</c> are created by passing in the original <see cref="IChangeListener{T}" />. The
 ///         <c>WeakChangeListener</c> should then be registered to listen for changes of the observed object.

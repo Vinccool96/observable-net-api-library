@@ -57,5 +57,5 @@ public interface IObservable
     /// </summary>
     /// <param name="listener">The <c>IInvalidationListener</c> to verify</param>
     /// <returns><c>true</c>, if the listener already listens, <c>false</c> otherwise.</returns>
-    public bool IsListenerAlreadyAdded(IInvalidationListener listener);
+    public bool HasListener(IInvalidationListener listener);
 }
