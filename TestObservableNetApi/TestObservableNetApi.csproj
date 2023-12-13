@@ -18,4 +18,8 @@
         <ProjectReference Include="..\ObservableNetApi\ObservableNetApi.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Internal\Collections\" />
+    </ItemGroup>
+
 </Project>
