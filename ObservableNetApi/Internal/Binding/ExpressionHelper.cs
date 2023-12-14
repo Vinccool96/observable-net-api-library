@@ -44,7 +44,7 @@ public abstract class ExpressionHelper<T> : ExpressionHelperBase
 
         protected override ExpressionHelper<T> AddListener(IInvalidationListener listener)
         {
-            return this;
+            return new Generic(Observable, _listener, listener);
         }
 
         protected override ExpressionHelper<T>? RemoveListener(IInvalidationListener listener)
@@ -59,7 +59,7 @@ public abstract class ExpressionHelper<T> : ExpressionHelperBase
 
         protected override ExpressionHelper<T> AddListener(IChangeListener<T> listener)
         {
-            return this;
+            return new Generic(Observable, _listener, listener);
         }
 
         protected override ExpressionHelper<T> RemoveListener(IChangeListener<T> listener)
@@ -109,7 +109,7 @@ public abstract class ExpressionHelper<T> : ExpressionHelperBase
 
         protected override ExpressionHelper<T> AddListener(IInvalidationListener listener)
         {
-            return this;
+            return new Generic(Observable, listener, _listener);
         }
 
         protected override ExpressionHelper<T> RemoveListener(IInvalidationListener listener)
@@ -124,7 +124,7 @@ public abstract class ExpressionHelper<T> : ExpressionHelperBase
 
         protected override ExpressionHelper<T> AddListener(IChangeListener<T> listener)
         {
-            return this;
+            return new Generic(Observable, _listener, listener);
         }
 
         protected override ExpressionHelper<T>? RemoveListener(IChangeListener<T> listener)
@@ -231,14 +231,14 @@ public abstract class ExpressionHelper<T> : ExpressionHelperBase
                 {
                     // ReSharper disable once CoVariantArrayConversion
                     _invalidationSize = Trim(_invalidationSize, _invalidationListeners);
-                    if (_invalidationSize != oldSize)
+                    if (_invalidationSize == oldSize)
                     {
-                        return this;
+                        var newSize = _invalidationSize < oldSize ? oldSize : oldSize * 3 / 2 + 1;
+                        Array.Resize(ref _invalidationListeners, newSize);
                     }
-
-                    var newSize = _invalidationSize < oldSize ? oldSize : oldSize * 3 / 2 + 1;
-                    Array.Resize(ref _invalidationListeners, newSize);
                 }
+
+                _invalidationListeners[_invalidationSize++] = listener;
             }
 
             return this;
@@ -332,14 +332,14 @@ public abstract class ExpressionHelper<T> : ExpressionHelperBase
                 {
                     // ReSharper disable once CoVariantArrayConversion
                     _changeSize = Trim(_changeSize, _changeListeners);
-                    if (_changeSize != oldSize)
+                    if (_changeSize == oldSize)
                     {
-                        return this;
+                        var newSize = _changeSize < oldSize ? oldSize : oldSize * 3 / 2 + 1;
+                        Array.Resize(ref _changeListeners, newSize);
                     }
-
-                    var newSize = _changeSize < oldSize ? oldSize : oldSize * 3 / 2 + 1;
-                    Array.Resize(ref _changeListeners, newSize);
                 }
+
+                _changeListeners[_changeSize++] = listener;
             }
 
             return this;
@@ -358,7 +358,7 @@ public abstract class ExpressionHelper<T> : ExpressionHelperBase
                 {
                     if (_invalidationSize == 1)
                     {
-                        return new SingleChange(Observable, _changeListeners[0]!);
+                        return new SingleInvalidation(Observable, _invalidationListeners[0]!);
                     }
 
                     _changeListeners = [];
