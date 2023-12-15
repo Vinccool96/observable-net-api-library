@@ -9,6 +9,7 @@ public class ObservableObjectValueStub<T>(T initialValue) : ObservableValueBase<
     public void Set(T value)
     {
         _value = value;
+        FireValueChangedEvent();
     }
 
     public T Get()

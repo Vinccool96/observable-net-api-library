@@ -8,7 +8,7 @@ public class InvalidationListenerMock : IInvalidationListener
     private uint _counter;
     private IObservable? _observable;
 
-    public void Invalidated(IObservable observable)
+    public virtual void Invalidated(IObservable observable)
     {
         _observable = observable;
         _counter++;
